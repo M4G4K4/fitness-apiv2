@@ -18,6 +18,4 @@ import { jwtConstants } from './constants';
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })
-export class AuthModule {
-
-}
+export class AuthModule {}
