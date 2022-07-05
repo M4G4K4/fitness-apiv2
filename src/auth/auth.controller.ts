@@ -1,11 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { Controller, Get, Post, Request} from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  /*
+    constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+    private jwtService: JwtService,
+  ) {}
+   */
+
+  async register(user: any) {
+    return null;
+  }
+
+  @Post('auth/login')
+  async login(@Request() req) {
+    //return this.authService.login(req.user);
+    return null;
+  }
+
+  //@UseGuards(JwtAuthGuard)
+  @Get('auth/login')
+  getProfile(@Request() req) {
+    return null;
+    //return req.user;
+  }
 
   /*
   @Post()

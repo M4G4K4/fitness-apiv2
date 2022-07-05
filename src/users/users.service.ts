@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(@InjectRepository(Users) private User: Repository<Users>) {}
 
-  async findUser(email: string) {
+  async findUser() {
     return null;
   }
 
