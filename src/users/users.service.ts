@@ -8,9 +8,7 @@ import { UserMapper } from './user.mapper';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(Users) private User: Repository<Users>
-  ) {}
+  constructor(@InjectRepository(Users) private User: Repository<Users>) {}
 
   async createUser(userCreate: UserCreateDto) {
     //TODO: implement mapper for the set the data to User entity
@@ -23,7 +21,7 @@ export class UsersService {
     user.first_name = userCreate.first_name;
     user.last_name = userCreate.last_name;
     user.username = userCreate.username;
-    user.password = await this.encryptPassword(userCreate.password);
+    user.password = await UsersService.encryptPassword(userCreate.password);
     user.is_active = true;
 
     const userSave = await this.User.save(user);
@@ -31,7 +29,7 @@ export class UsersService {
     return UserMapper.userToUserRead(userSave);
   }
 
-  private async encryptPassword(password: string) {
+  private static async encryptPassword(password: string) {
     const saltOrRounds = 10;
     return await bcrypt.hash(password, saltOrRounds);
   }
