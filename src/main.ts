@@ -13,8 +13,10 @@ async function bootstrap() {
 
 
   app.use(helmet());
-  app.use(cookieParser());
-  app.use(csurf());
+
+  //TODO: Fix problem with misconfigured csrf
+  //app.use(cookieParser());
+  //app.use(csurf());
 
   app.enableCors();
 
