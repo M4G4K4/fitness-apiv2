@@ -7,6 +7,7 @@ export class UserMapper {
   static userToUserRead(user: Users): UserReadDto {
     const userRead = new UserReadDto();
 
+    userRead.id = user.id;
     userRead.email = user.email;
     userRead.first_name = user.first_name;
     userRead.last_name = user.last_name;

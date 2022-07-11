@@ -11,7 +11,7 @@ export class Users {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({nullable: false})
   email: string;
 
   @Column()
@@ -23,15 +23,15 @@ export class Users {
   @Column()
   username: string;
 
-  @Column()
+  @Column({nullable: false})
   password: string;
 
   @Column({ default: true })
   is_active: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({nullable: false})
   created_at: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({nullable: false})
   updated_at: Date;
 }
