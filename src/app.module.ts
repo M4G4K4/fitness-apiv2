@@ -3,15 +3,15 @@ import { AppController } from './app.controller';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from './config/TypeOrmConfigService';
+import { ConfigModule } from '@nestjs/config';
+import {config} from '../ormconfig';
 
 @Module({
   imports: [
     AuthModule,
     UsersModule,
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmConfigService,
-    }),
+    TypeOrmModule.forRoot(config),
+    ConfigModule.forRoot()
   ],
   controllers: [AppController],
   providers: [],

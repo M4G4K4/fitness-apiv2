@@ -3,8 +3,6 @@
 
 This API makes the necessary back-end logic to support the fitness app.
 
-
-
 ## Installation
 
 ```bash
