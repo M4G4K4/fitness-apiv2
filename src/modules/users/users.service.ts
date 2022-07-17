@@ -1,5 +1,3 @@
-// @ts-ignore
-
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/users.entity';
@@ -7,7 +5,7 @@ import { Repository } from 'typeorm';
 import { UserCreateDto } from './dto/user-create.dto';
 import * as bcrypt from 'bcrypt';
 import { UserMapper } from './user.mapper';
-import {AuthLogin} from "../auth/dto/aut-login.dto";
+import {AuthLogin} from '../auth/dto/auth-login.dto';
 
 @Injectable()
 export class UsersService {
