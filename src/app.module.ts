@@ -11,7 +11,7 @@ import {config} from '../ormconfig';
     AuthModule,
     UsersModule,
     TypeOrmModule.forRoot(config),
-    ConfigModule.forRoot()
+    ConfigModule.forRoot({isGlobal: true})
   ],
   controllers: [AppController],
   providers: [],

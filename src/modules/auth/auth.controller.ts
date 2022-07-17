@@ -17,7 +17,7 @@ export class AuthController {
     return this.userService.createUser(userCreate);
   }
 
-  @Get("/login")
+  @Post("/login")
   @ApiBody({type: [AuthLogin]})
   async login (@Body() authLogin: AuthLogin){
     return this.authService.login(authLogin);
