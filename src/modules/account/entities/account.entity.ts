@@ -1,6 +1,7 @@
-import {Column, CreateDateColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
 import {Users} from "../../users/entities/users.entity";
 
+@Entity()
 export class Account {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -29,6 +30,6 @@ export class Account {
     @UpdateDateColumn({nullable: false})
     updated_at: Date;
 
-    @OneToMany(() => Users, (users) => users.id)
+    @OneToMany(() => Users, (users) => users.account)
     users: Users[];
 }

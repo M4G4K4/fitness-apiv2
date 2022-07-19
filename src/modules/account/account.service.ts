@@ -5,11 +5,7 @@ import {Account} from "./entities/account.entity";
 
 @Injectable()
 export class AccountService {
-    constructor(@InjectRepository(Account) private accountRepository: Repository<Account>) {}
-
-
-    async findOne(id: string) {
-        return `This action returns a #${id} account`;
+    constructor(@InjectRepository(Account) private accountRepository: Repository<Account>) {
     }
 
 }
