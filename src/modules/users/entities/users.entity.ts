@@ -3,8 +3,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn,
+  UpdateDateColumn, ManyToOne,
 } from 'typeorm';
+import {Account} from "../../account/entities/account.entity";
 
 @Entity()
 export class Users {
@@ -35,4 +36,7 @@ export class Users {
 
   @UpdateDateColumn({nullable: false})
   updated_at: Date;
+
+  @ManyToOne(() => Account, (account) => account.users)
+  account: Account;
 }
