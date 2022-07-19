@@ -1,5 +1,15 @@
 
+
+
 # Development Notes
+
+
+
+### TODO
+
+Make service to create accounts, list and get
+to then implement the foreign key in the users table to when create a user
+the account to be required to provide
 
 ### Code
 
