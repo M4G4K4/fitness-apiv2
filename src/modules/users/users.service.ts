@@ -42,7 +42,6 @@ export class UsersService {
     }
 
     async validateUserLogin(authLogin: AuthLogin): Promise<Users> {
-
         const user = await this.usersRepository.findOneBy({
             email: authLogin.email
         });
