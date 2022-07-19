@@ -3,7 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn, ManyToOne,
+  UpdateDateColumn, ManyToOne, JoinColumn,
 } from 'typeorm';
 import {Account} from "../../account/entities/account.entity";
 
@@ -38,5 +38,6 @@ export class Users {
   updated_at: Date;
 
   @ManyToOne(() => Account, (account) => account.users)
+  @JoinColumn({ name: "account_id", referencedColumnName: "id"})
   account: Account;
 }
