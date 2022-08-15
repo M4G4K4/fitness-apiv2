@@ -13,18 +13,9 @@ export class UsersService {
   }
 
   async createUser(userCreate: UserCreateDto) {
-    //TODO: implement mapper for the set the data to User entity
-    //TODO: validate if email is not already present in the database
-    //TODO: validate if username is not already present in the database
+    await this.userValidations(userCreate);
 
-    const user = new Users();
-
-    user.email = userCreate.email;
-    user.first_name = userCreate.first_name;
-    user.last_name = userCreate.last_name;
-    user.username = userCreate.username;
-    user.password = await UsersService.encryptPassword(userCreate.password);
-    user.is_active = true;
+    const user = await UserMapper.userCreateToUser(userCreate);
 
     const userSave = await this.usersRepository.save(user);
 
@@ -49,9 +40,27 @@ export class UsersService {
     return user;
   }
 
-  private static async encryptPassword(password: string) {
+  static async encryptPassword(password: string) {
     const saltOrRounds = 10;
     return await bcrypt.hash(password, saltOrRounds);
+  }
+
+  async userValidations(userCreate: UserCreateDto){
+    const userEmail = await this.usersRepository.findOneBy({
+      email: userCreate.email
+    });
+
+    if(userEmail){
+      throw new HttpException('Email already registered', HttpStatus.CONFLICT);
+    }
+
+    const userUsername = await this.usersRepository.findOneBy({
+      username: userCreate.username
+    });
+
+    if(userUsername){
+      throw new HttpException('Username already registered', HttpStatus.CONFLICT);
+    }
   }
 
   private static async comparePassword(loginPassword: string, userPassword: string) {
