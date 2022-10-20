@@ -15,9 +15,7 @@ export class UsersService {
     }
 
     async createUser(userCreate: UserCreateDto) {
-        // Validations
-        await this.isEmailPresent(userCreate.email);
-        await this.isUsernamePresent(userCreate.username);
+        // TODO: Add validations
 
         const account = await this.accountRepository.findOneBy({
             id: userCreate.account_id
@@ -27,15 +25,7 @@ export class UsersService {
             throw new HttpException('Account does not exist', HttpStatus.NOT_FOUND);
         }
 
-        const user = new Users();
-
-        user.email = userCreate.email;
-        user.first_name = userCreate.first_name;
-        user.last_name = userCreate.last_name;
-        user.username = userCreate.username;
-        user.password = await UsersService.encryptPassword(userCreate.password);
-        user.account = account;
-        user.is_active = true;
+        const user = await UserMapper.userCreateToUser(userCreate);
 
         const userSave = await this.usersRepository.save(user);
 
@@ -43,6 +33,7 @@ export class UsersService {
     }
 
     async validateUserLogin(authLogin: AuthLogin): Promise<Users> {
+
         const user = await this.usersRepository.findOneBy({
             email: authLogin.email
         });
@@ -59,27 +50,7 @@ export class UsersService {
         return user;
     }
 
-    async isEmailPresent(email: string) {
-        const user = await this.usersRepository.findOneBy({
-            email: email
-        });
-
-        if (user) {
-            throw new HttpException('Email already exists.', HttpStatus.CONFLICT);
-        }
-    }
-
-    async isUsernamePresent(username: string) {
-        const user = await this.usersRepository.findOneBy({
-            username: username
-        });
-
-        if (user) {
-            throw new HttpException('Username already exists.', HttpStatus.CONFLICT);
-        }
-    }
-
-    private static async encryptPassword(password: string) {
+    static async encryptPassword(password: string) {
         const saltOrRounds = 10;
         return await bcrypt.hash(password, saltOrRounds);
     }
