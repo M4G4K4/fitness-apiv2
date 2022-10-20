@@ -1,34 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { AccountService } from './account.service';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import {Body, Controller, Post} from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
+import {AccountService} from './account.service';
+import { AccountCreateDto } from './dto/account-create.dto'
 
 @Controller('account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+    constructor(private readonly accountService: AccountService) {
+    }
 
-  @Post()
-  create(@Body() createAccountDto: CreateAccountDto) {
-    return this.accountService.create(createAccountDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.accountService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountService.update(+id, updateAccountDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accountService.remove(+id);
-  }
+    @Post()
+    @ApiBody({ type: [AccountCreateDto] })
+    async createAccount(@Body() accountCreateDto: AccountCreateDto) {
+        return this.accountService.createAccount(accountCreateDto);
+    }
 }

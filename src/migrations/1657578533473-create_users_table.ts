@@ -7,7 +7,7 @@ export class createUsersTable1657578533473 implements MigrationInterface {
             `
                 CREATE TABLE users
                 (
-                    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+                    id         varchar(255) not null DEFAULT uuid_generate_v4(),
                     email      varchar(255) not null,
                     first_name varchar(50)  null,
                     last_name  varchar(50)  null,

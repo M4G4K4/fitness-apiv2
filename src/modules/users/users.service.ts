@@ -1,69 +1,61 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from './entities/users.entity';
-import { Repository } from 'typeorm';
-import { UserCreateDto } from './dto/user-create.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Users} from './entities/users.entity';
+import {Repository} from 'typeorm';
+import {UserCreateDto} from './dto/user-create.dto';
 import * as bcrypt from 'bcrypt';
-import { UserMapper } from './user.mapper';
+import {UserMapper} from './user.mapper';
 import {AuthLogin} from '../auth/dto/auth-login.dto';
+import {Account} from "../account/entities/account.entity";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(Users) private usersRepository: Repository<Users>) {
-  }
-
-  async createUser(userCreate: UserCreateDto) {
-    await this.userValidations(userCreate);
-
-    const user = await UserMapper.userCreateToUser(userCreate);
-
-    const userSave = await this.usersRepository.save(user);
-
-    return UserMapper.userToUserRead(userSave);
-  }
-
-  async validateUserLogin(authLogin: AuthLogin): Promise<Users> {
-
-    const user = await this.usersRepository.findOneBy({
-      email: authLogin.email
-    });
-
-    if (!user) {
-      throw new HttpException('There was a problem validation email or password', HttpStatus.UNAUTHORIZED);
+    constructor(@InjectRepository(Users) private usersRepository: Repository<Users>,
+                @InjectRepository(Account) private accountRepository: Repository<Account>) {
     }
 
+    async createUser(userCreate: UserCreateDto) {
+        // TODO: Add validations
 
-    if(!await UsersService.comparePassword(authLogin.password, user.password)){
-      throw new HttpException('There was a problem validation email or password', HttpStatus.UNAUTHORIZED);
+        const account = await this.accountRepository.findOneBy({
+            id: userCreate.account_id
+        });
+
+        if (!account) {
+            throw new HttpException('Account does not exist', HttpStatus.NOT_FOUND);
+        }
+
+        const user = await UserMapper.userCreateToUser(userCreate);
+
+        const userSave = await this.usersRepository.save(user);
+
+        return UserMapper.userToUserRead(userSave);
     }
 
-    return user;
-  }
+    async validateUserLogin(authLogin: AuthLogin): Promise<Users> {
 
-  static async encryptPassword(password: string) {
-    const saltOrRounds = 10;
-    return await bcrypt.hash(password, saltOrRounds);
-  }
+        const user = await this.usersRepository.findOneBy({
+            email: authLogin.email
+        });
 
-  async userValidations(userCreate: UserCreateDto){
-    const userEmail = await this.usersRepository.findOneBy({
-      email: userCreate.email
-    });
+        if (!user) {
+            throw new HttpException('There was a problem validation email or password', HttpStatus.UNAUTHORIZED);
+        }
 
-    if(userEmail){
-      throw new HttpException('Email already registered', HttpStatus.CONFLICT);
+
+        if (!await UsersService.comparePassword(authLogin.password, user.password)) {
+            throw new HttpException('There was a problem validation email or password', HttpStatus.UNAUTHORIZED);
+        }
+
+        return user;
     }
 
-    const userUsername = await this.usersRepository.findOneBy({
-      username: userCreate.username
-    });
-
-    if(userUsername){
-      throw new HttpException('Username already registered', HttpStatus.CONFLICT);
+    static async encryptPassword(password: string) {
+        const saltOrRounds = 10;
+        return await bcrypt.hash(password, saltOrRounds);
     }
-  }
 
-  private static async comparePassword(loginPassword: string, userPassword: string) {
-    return await bcrypt.compare(loginPassword, userPassword);
-  }
+    private static async comparePassword(loginPassword: string, userPassword: string) {
+        return await bcrypt.compare(loginPassword, userPassword);
+    }
 }

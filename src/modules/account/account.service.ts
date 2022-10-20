@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Repository} from "typeorm";
+import * as bcrypt from 'bcrypt';
+import { AccountCreateDto } from './dto/account-create.dto';
+import {AccountMapper} from './account.mapper';
+import {Account} from "./entities/account.entity";
 
 @Injectable()
 export class AccountService {
-  create(createAccountDto: CreateAccountDto) {
-    return 'This action adds a new account';
-  }
+    constructor(@InjectRepository(Account) private accountRepository: Repository<Account>) {
+    }
 
-  findAll() {
-    return `This action returns all account`;
-  }
+    async createAccount(accountCreateDto: AccountCreateDto){
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
-  }
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
-  }
+        const account = new Account();
+        account.name = accountCreateDto.name;
+        account.email = accountCreateDto.email;
+        account.password = await AccountService.encryptPassword(accountCreateDto.password);
 
-  remove(id: number) {
-    return `This action removes a #${id} account`;
-  }
+        const accountSave = await this.accountRepository.save(account);
+
+        return AccountMapper.accountToAccountRead(accountSave);
+    }
+
+
+    //TODO: Refactor this to its own Service to be used acrossed project and not being repeated
+    private static async encryptPassword(password: string) {
+        const saltOrRounds = 10;
+        return await bcrypt.hash(password, saltOrRounds);
+    }
+
+    private static async comparePassword(loginPassword: string, userPassword: string) {
+        return await bcrypt.compare(loginPassword, userPassword);
+    }
+
 }
