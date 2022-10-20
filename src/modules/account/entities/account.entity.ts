@@ -10,13 +10,7 @@ export class Account {
     email: string;
 
     @Column()
-    first_name: string;
-
-    @Column()
-    last_name: string;
-
-    @Column()
-    username: string;
+    name: string;
 
     @Column({nullable: false})
     password: string;

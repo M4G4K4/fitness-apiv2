@@ -47,5 +47,5 @@ Create migrations:
 
 Run migrations:
 ```bash
-  $ npx typeorm-ts-node-commonjs migration:run -d ormconfig-migrations.ts  
+  $ npx typeorm-ts-node-commonjs migration:run -d ormconfig-migrations.ts
 ```

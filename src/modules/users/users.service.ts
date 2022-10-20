@@ -15,6 +15,7 @@ export class UsersService {
     }
 
     async createUser(userCreate: UserCreateDto) {
+        // Validations
         await this.isEmailPresent(userCreate.email);
         await this.isUsernamePresent(userCreate.username);
 

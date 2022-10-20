@@ -9,9 +9,7 @@ export class createAccountTable1658179923043 implements MigrationInterface {
                 (
                     id         varchar(255) NOT NULL DEFAULT uuid_generate_v4(),
                     email      varchar(255) not null,
-                    first_name varchar(50)  null,
-                    last_name  varchar(50)  null,
-                    username   varchar(100) null,
+                    name varchar(50)  null,
                     password   varchar(100) not null,
                     is_active  boolean default true,
                     created_at timestamp without time zone NOT NULL DEFAULT now(),
